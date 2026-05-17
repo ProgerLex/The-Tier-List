@@ -67,4 +67,4 @@
 
 ### 📥 Скачать установщик >>>>>>
 
-** https://github.com/ProgerLex/The-Tier-List/releases/tag/v1.1.0 **
+**https://github.com/ProgerLex/The-Tier-List/releases/tag/v1.1.0**
