@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Тир-лист мейкер | оптимизированный</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #0d1f14;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            padding: 10px;
+            color: #e2f0e5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #122b1c;
+            border-radius: 16px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #358a62;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #c8f0d4, #6fbf8a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            background: #1f3d2c;
+            border: 1px solid #5fa87a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .danger {
+            border-color: #cb6e6e;
+        }
+
+        .counter {
+            background: #1a3a2a;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .main-scroll {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #tiers-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .tier-row {
+            background: #112717;
+            border-radius: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            border: 1px solid #397a58;
+            overflow: hidden;
+        }
+
+        .tier-label {
+            width: 110px;
+            background: #2a7a4e;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: text;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tier-label span {
+            outline: none;
+            background: rgba(0,0,0,0.25);
+            padding: 6px 8px;
+            border-radius: 20px;
+            display: inline-block;
+            width: 100%;
+            font-size: 13px;
+        }
+
+        .tier-items {
+            flex: 1;
+            min-height: 95px;
+            background: #0e2618;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .tier-controls {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            background: #102c1c;
+            padding: 0 12px;
+            border-left: 1px solid #397a58;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            color: #b5dec5;
+            font-family: monospace;
+        }
+
+        .image-item {
+            width: 80px;
+            background: #1d3929;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: grab;
+            position: relative;
+            border: 2px solid #51a87a;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .image-item:active {
+            cursor: grabbing;
+        }
+
+        .image-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            pointer-events: none;
+            border-radius: 8px;
+        }
+
+        .image-label {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 4px;
+            color: #c8f0d4;
+            font-weight: 500;
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .image-label.hidden {
+            display: none;
+        }
+
+        .delete-img {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.7);
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ffa0a0;
+            border-radius: 10px;
+            z-index: 10;
+        }
+
+        .unassigned-area {
+            background: #112717;
+            border-radius: 16px;
+            padding: 10px;
+            border: 1px solid #398a62;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .unassigned-title {
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .unassigned-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 80px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 9px;
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .image-item {
+                width: 70px;
+            }
+            .image-item img {
+                width: 60px;
+                height: 60px;
+            }
+            .image-label {
+                font-size: 9px;
+                max-width: 70px;
+            }
+            .tier-label {
+                width: 90px;
+                font-size: 12px;
+            }
+            .tier-label span {
+                font-size: 11px;
+            }
+            button {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+            h1 {
+                font-size: 16px;
+            }
+            .icon-btn {
+                font-size: 14px;
+            }
+            .counter {
+                font-size: 10px;
+                padding: 2px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>ТИР-ЛИСТ МЕЙКЕР</h1>
+        <div class="toolbar">
+            <input type="file" id="addImagesInput" multiple accept="image/*" style="display:none">
+            <button id="uploadBtn">ДОБАВИТЬ</button>
+            <button id="addRowBtn">+ РЯД</button>
+            <button id="clearAllBtn" class="danger">🗑 ВСЕ КАРТИНКИ</button>
+            <button id="toggleLabelsBtn">🏷️ СКРЫТЬ ПОДПИСИ</button>
+            <button id="resetBtn" class="danger">СБРОС</button>
+        </div>
+        <div class="counter" id="counter">0 картинок</div>
+    </div>
+
+    <div class="main-scroll">
+        <div id="tiers-container"></div>
+    </div>
+
+    <div class="unassigned-area">
+        <div class="unassigned-title">НЕРАСПРЕДЕЛЁННЫЕ (перетащи)</div>
+        <div id="unassignedItems" class="unassigned-items"></div>
+    </div>
+    <footer>клик на текст — правка | подписи под картинками</footer>
+</div>
+
+<script>
+    (function() {
+        let tiers = [
+            { label: "S TIER", color: "#238c51", items: [] },
+            { label: "A TIER", color: "#33a362", items: [] },
+            { label: "B TIER", color: "#4cb87a", items: [] },
+            { label: "C TIER", color: "#74cf94", items: [] },
+            { label: "D TIER", color: "#dbac5e", items: [] },
+            { label: "E TIER", color: "#cd7a7a", items: [] }
+        ];
+        
+        // ОПТИМИЗИРОВАННЫЕ ПОДПИСИ
+        const initialItems = [
+            { url: "https://i.ytimg.com/vi/u1MLBnIM37A/maxresdefault.jpg", label: "ARK" },
+            { url: "https://i.ytimg.com/vi/YxTvCUin8DU/maxresdefault.jpg", label: "LEGO STAR WARS" },
+            { url: "https://i.ytimg.com/vi/jFApQMxBlk4/maxresdefault.jpg", label: "WITCHER 3" },
+            { url: "https://i.ytimg.com/vi/Rjij4OTMwuM/maxresdefault.jpg", label: "HITMAN 3" },
+            { url: "https://i.playground.ru/p/w9oyDncksNGWLbEJNdDW2w.jpeg", label: "WITCHER 2" },
+            { url: "https://images.steamusercontent.com/ugc/1697254277866534390/0314AF3C4CB7270BFD29A0E80EB6E1BDCA151BD1/?imw=512&imh=384&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true", label: "WITCHER 1" },
+            { url: "https://basket-21.wbbasket.ru/vol3648/part364816/364816926/images/big/1.webp", label: "MISIDE" },
+            { url: "https://i.pinimg.com/originals/f4/03/f0/f403f063a3e152ca445cbb59dc9751ec.jpg?nii=t", label: "MINECRAFT" },
+            { url: "https://avatars.mds.yandex.net/get-mpic/12300570/2a0000019ad0f74c28f4e0f842000c404c89/orig", label: "FC 26" },
+            { url: "https://cdna.artstation.com/p/assets/images/images/016/514/720/large/victor-catib-logo-mk-vetorizado-completo.jpg?1552442118", label: "MK 9" },
+            { url: "https://i.playground.ru/e/gERag2pKnOBavwmckSFuBg.png", label: "MK X" },
+            { url: "https://i.pinimg.com/736x/f9/8d/3e/f98d3e3a60da5bda659e5a16cbbf3a89.jpg", label: "MK 11" },
+            { url: "https://i.pinimg.com/736x/c1/c0/94/c1c094725dc366398b93f7b4ee7898dd.jpg", label: "MK 1" }
+        ];
+        
+        let unassignedItems = [];
+        let nextId = 1;
+        let dragSource = null;
+        let labelsVisible = true;
+
+        function generateId() {
+            return Date.now() + '-' + Math.random() + '-' + (nextId++);
+        }
+
+        function updateCounter() {
+            const total = unassignedItems.length + tiers.reduce((sum, tier) => sum + tier.items.length, 0);
+            document.getElementById('counter').innerText = total + ' картинок';
+        }
+
+        function render() {
+            const container = document.getElementById('tiers-container');
+            container.innerHTML = '';
+            tiers.forEach((tier, idx) => {
+                const row = document.createElement('div');
+                row.className = 'tier-row';
+
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'tier-label';
+                labelDiv.style.backgroundColor = tier.color;
+                const labelSpan = document.createElement('span');
+                labelSpan.contentEditable = 'true';
+                labelSpan.innerText = tier.label;
+                labelSpan.addEventListener('blur', (e) => {
+                    tiers[idx].label = e.target.innerText;
+                    render();
+                });
+                labelDiv.appendChild(labelSpan);
+
+                const itemsDiv = document.createElement('div');
+                itemsDiv.className = 'tier-items';
+                itemsDiv.dataset.tierIndex = idx;
+
+                tier.items.forEach((item, itemIdx) => {
+                    itemsDiv.appendChild(createImageElement(item.id, item.url, item.label, idx, itemIdx, false));
+                });
+
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'tier-controls';
+                const colorBtn = document.createElement('button');
+                colorBtn.innerText = '🎨';
+                colorBtn.className = 'icon-btn';
+                colorBtn.onclick = () => {
+                    let c = prompt('Цвет (HEX)', tier.color);
+                    if (c && c.trim()) {
+                        tiers[idx].color = c.trim();
+                        render();
+                    }
+                };
+                const upBtn = document.createElement('button');
+                upBtn.innerText = '⬆';
+                upBtn.className = 'icon-btn';
+                upBtn.onclick = () => {
+                    if (idx > 0) {
+                        [tiers[idx - 1], tiers[idx]] = [tiers[idx], tiers[idx - 1]];
+                        render();
+                    }
+                };
+                const downBtn = document.createElement('button');
+                downBtn.innerText = '⬇';
+                downBtn.className = 'icon-btn';
+                downBtn.onclick = () => {
+                    if (idx < tiers.length - 1) {
+                        [tiers[idx + 1], tiers[idx]] = [tiers[idx], tiers[idx + 1]];
+                        render();
+                    }
+                };
+                const delBtn = document.createElement('button');
+                delBtn.innerText = '🗑';
+                delBtn.className = 'icon-btn';
+                delBtn.onclick = () => {
+                    tiers.splice(idx, 1);
+                    render();
+                };
+                controlsDiv.appendChild(colorBtn);
+                controlsDiv.appendChild(upBtn);
+                controlsDiv.appendChild(downBtn);
+                controlsDiv.appendChild(delBtn);
+
+                row.appendChild(labelDiv);
+                row.appendChild(itemsDiv);
+                row.appendChild(controlsDiv);
+                container.appendChild(row);
+            });
+
+            const unassignedContainer = document.getElementById('unassignedItems');
+            unassignedContainer.innerHTML = '';
+            unassignedItems.forEach((item) => {
+                unassignedContainer.appendChild(createImageElement(item.id, item.url, item.label, null, null, true));
+            });
+            attachDragDropEvents();
+            updateCounter();
+        }
+
+        function createImageElement(id, url, label, tierIndex, itemIndex, fromUnassigned) {
+            const div = document.createElement('div');
+            div.className = 'image-item';
+            div.draggable = true;
+            div.setAttribute('data-id', id);
+            if (tierIndex !== undefined) div.setAttribute('data-tier-index', tierIndex);
+            if (itemIndex !== undefined) div.setAttribute('data-item-index', itemIndex);
+            div.setAttribute('data-from-unassigned', fromUnassigned);
+
+            const img = document.createElement('img');
+            img.src = url;
+            div.appendChild(img);
+            
+            const labelSpan = document.createElement('div');
+            labelSpan.className = 'image-label';
+            if (!labelsVisible) labelSpan.classList.add('hidden');
+            labelSpan.innerText = label;
+            div.appendChild(labelSpan);
+
+            const delSpan = document.createElement('span');
+            delSpan.className = 'delete-img';
+            delSpan.innerText = '✕';
+            delSpan.onclick = (e) => {
+                e.stopPropagation();
+                if (fromUnassigned) {
+                    const idx = unassignedItems.findIndex(i => i.id === id);
+                    if (idx !== -1) unassignedItems.splice(idx, 1);
+                } else {
+                    const tier = tiers[tierIndex];
+                    if (tier && tier.items[itemIndex]) tier.items.splice(itemIndex, 1);
+                }
+                render();
+            };
+            div.appendChild(delSpan);
+
+            div.addEventListener('dragstart', (e) => {
+                dragSource = {
+                    fromUnassigned: fromUnassigned,
+                    tierIndex: tierIndex,
+                    itemIndex: itemIndex,
+                    id: id
+                };
+                e.dataTransfer.setData('text/plain', id);
+                div.style.opacity = '0.4';
+            });
+            div.addEventListener('dragend', () => {
+                div.style.opacity = '';
+                dragSource = null;
+            });
+            return div;
+        }
+
+        function attachDragDropEvents() {
+            const tierContainers = document.querySelectorAll('.tier-items');
+            tierContainers.forEach(container => {
+                container.addEventListener('dragover', (e) => e.preventDefault());
+                container.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (!dragSource) return;
+                    const targetTierIdx = parseInt(container.dataset.tierIndex);
+                    if (isNaN(targetTierIdx)) return;
+                    if (dragSource.fromUnassigned) {
+                        const srcIdx = unassignedItems.findIndex(i => i.id === dragSource.id);
+                        if (srcIdx !== -1) {
+                            const [moved] = unassignedItems.splice(srcIdx, 1);
+                            tiers[targetTierIdx].items.push(moved);
+                        }
+                    } else {
+                        const srcTier = tiers[dragSource.tierIndex];
+                        if (srcTier && srcTier.items[dragSource.itemIndex]) {
+                            const [moved] = srcTier.items.splice(dragSource.itemIndex, 1);
+                            tiers[targetTierIdx].items.push(moved);
+                        }
+                    }
+                    render();
+                });
+            });
+
+            const unassignedZone = document.getElementById('unassignedItems');
+            if (unassignedZone) {
+                unassignedZone.addEventListener('dragover', (e) => e.preventDefault());
+                unassignedZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (!dragSource) return;
+                    if (!dragSource.fromUnassigned) {
+                        const srcTier = tiers[dragSource.tierIndex];
+                        if (srcTier && srcTier.items[dragSource.itemIndex]) {
+                            const [moved] = srcTier.items.splice(dragSource.itemIndex, 1);
+                            unassignedItems.push(moved);
+                        }
+                        render();
+                    }
+                });
+            }
+        }
+
+        document.getElementById('uploadBtn').onclick = () => document.getElementById('addImagesInput').click();
+        document.getElementById('addImagesInput').onchange = (e) => {
+            Array.from(e.target.files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    const label = prompt("Введите подпись для картинки", "Новая игра");
+                    reader.onload = (ev) => {
+                        unassignedItems.push({
+                            id: generateId(),
+                            url: ev.target.result,
+                            label: label || "Без названия"
+                        });
+                        render();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            e.target.value = '';
+        };
+        
+        document.getElementById('addRowBtn').onclick = () => {
+            tiers.push({ label: "НОВЫЙ ТИР", color: "#4fa87a", items: [] });
+            render();
+        };
+        
+        document.getElementById('clearAllBtn').onclick = () => {
+            if (confirm("Удалить ВСЕ картинки из тиров и нераспределённых?")) {
+                tiers.forEach(tier => tier.items = []);
+                unassignedItems = [];
+                render();
+            }
+        };
+        
+        document.getElementById('toggleLabelsBtn').onclick = () => {
+            labelsVisible = !labelsVisible;
+            document.getElementById('toggleLabelsBtn').innerText = labelsVisible ? "🏷️ СКРЫТЬ ПОДПИСИ" : "🏷️ ПОКАЗАТЬ ПОДПИСИ";
+            document.querySelectorAll('.image-label').forEach(el => {
+                if (labelsVisible) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        };
+        
+        document.getElementById('resetBtn').onclick = () => {
+            tiers = [
+                { label: "S TIER", color: "#238c51", items: [] },
+                { label: "A TIER", color: "#33a362", items: [] },
+                { label: "B TIER", color: "#4cb87a", items: [] },
+                { label: "C TIER", color: "#74cf94", items: [] },
+                { label: "D TIER", color: "#dbac5e", items: [] },
+                { label: "E TIER", color: "#cd7a7a", items: [] }
+            ];
+            unassignedItems = [];
+            initialItems.forEach(item => {
+                unassignedItems.push({ id: generateId(), url: item.url, label: item.label });
+            });
+            render();
+        };
+
+        initialItems.forEach(item => {
+            unassignedItems.push({ id: generateId(), url: item.url, label: item.label });
+        });
+        
+        render();
+    })();
+</script>
+</body>
+</html>
