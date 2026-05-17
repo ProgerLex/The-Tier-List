@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Тир-лист мейкер | оптимизированный</title>
+    <title>Тир-лист мейкер | все игры</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0d1f14;
             font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -23,15 +17,7 @@
             overflow: hidden;
             width: 100%;
         }
-
-        .container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
+        .container { width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
         .header {
             background: #122b1c;
             border-radius: 16px;
@@ -45,7 +31,6 @@
             border: 1px solid #358a62;
             flex-shrink: 0;
         }
-
         h1 {
             font-size: 20px;
             font-weight: 600;
@@ -54,14 +39,7 @@
             background-clip: text;
             color: transparent;
         }
-
-        .toolbar {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
+        .toolbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
         button {
             background: #1f3d2c;
             border: 1px solid #5fa87a;
@@ -73,15 +51,8 @@
             font-size: 12px;
             transition: all 0.2s ease;
         }
-
-        button:active {
-            transform: scale(0.96);
-        }
-
-        .danger {
-            border-color: #cb6e6e;
-        }
-
+        button:active { transform: scale(0.96); }
+        .danger { border-color: #cb6e6e; }
         .counter {
             background: #1a3a2a;
             padding: 4px 12px;
@@ -89,21 +60,8 @@
             font-size: 12px;
             font-weight: bold;
         }
-
-        .main-scroll {
-            flex: 1;
-            overflow-y: auto;
-            min-height: 0;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        #tiers-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
+        .main-scroll { flex: 1; overflow-y: auto; min-height: 0; -webkit-overflow-scrolling: touch; }
+        #tiers-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px; }
         .tier-row {
             background: #112717;
             border-radius: 16px;
@@ -112,7 +70,6 @@
             border: 1px solid #397a58;
             overflow: hidden;
         }
-
         .tier-label {
             width: 110px;
             background: #2a7a4e;
@@ -125,7 +82,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .tier-label span {
             outline: none;
             background: rgba(0,0,0,0.25);
@@ -135,7 +91,6 @@
             width: 100%;
             font-size: 13px;
         }
-
         .tier-items {
             flex: 1;
             min-height: 95px;
@@ -146,7 +101,6 @@
             gap: 10px;
             padding: 10px;
         }
-
         .tier-controls {
             display: flex;
             flex-direction: row;
@@ -157,7 +111,6 @@
             padding: 0 12px;
             border-left: 1px solid #397a58;
         }
-
         .icon-btn {
             background: none;
             border: none;
@@ -167,14 +120,12 @@
             color: #b5dec5;
             font-family: monospace;
         }
-
         .image-item {
             width: 80px;
             background: #1d3929;
             display: flex;
             flex-direction: column;
             align-items: center;
-            cursor: grab;
             position: relative;
             border: 2px solid #51a87a;
             flex-shrink: 0;
@@ -182,19 +133,13 @@
             overflow: hidden;
             padding: 4px;
         }
-
-        .image-item:active {
-            cursor: grabbing;
-        }
-
         .image-item img {
             width: 70px;
             height: 70px;
             object-fit: cover;
-            pointer-events: none;
             border-radius: 8px;
+            cursor: pointer;
         }
-
         .image-label {
             font-size: 10px;
             text-align: center;
@@ -206,11 +151,17 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
-        .image-label.hidden {
-            display: none;
+        .desc-btn {
+            font-size: 9px;
+            background: #2a5a3a;
+            border: none;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-top: 4px;
+            cursor: pointer;
+            width: 100%;
         }
-
         .delete-img {
             position: absolute;
             top: 2px;
@@ -227,7 +178,6 @@
             border-radius: 10px;
             z-index: 10;
         }
-
         .unassigned-area {
             background: #112717;
             border-radius: 16px;
@@ -236,61 +186,45 @@
             margin-top: 8px;
             flex-shrink: 0;
         }
+        .unassigned-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+        .unassigned-items { display: flex; flex-wrap: wrap; gap: 10px; min-height: 80px; }
+        footer { text-align: center; margin-top: 6px; font-size: 9px; opacity: 0.5; flex-shrink: 0; }
 
-        .unassigned-title {
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 10px;
+        .modal, .desc-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-
-        .unassigned-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            min-height: 80px;
+        .modal.active, .desc-modal.active { display: flex; }
+        .modal-content, .desc-content {
+            background: #1a2a1f;
+            border-radius: 20px;
+            padding: 20px;
+            width: 350px;
+            max-width: 90%;
+            border: 2px solid #4CAF50;
+            max-height: 80vh;
+            overflow-y: auto;
         }
-
-        footer {
-            text-align: center;
-            margin-top: 6px;
-            font-size: 9px;
-            opacity: 0.5;
-            flex-shrink: 0;
-        }
+        .desc-content h3 { margin-bottom: 10px; color: #ffd966; }
+        .desc-content p { font-size: 13px; line-height: 1.4; margin-bottom: 8px; }
+        .modal-content input { width: 100%; padding: 8px; margin: 10px 0; background: #0d1f14; border: 1px solid #4CAF50; color: white; border-radius: 8px; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
 
         @media (max-width: 600px) {
-            .image-item {
-                width: 70px;
-            }
-            .image-item img {
-                width: 60px;
-                height: 60px;
-            }
-            .image-label {
-                font-size: 9px;
-                max-width: 70px;
-            }
-            .tier-label {
-                width: 90px;
-                font-size: 12px;
-            }
-            .tier-label span {
-                font-size: 11px;
-            }
-            button {
-                padding: 4px 10px;
-                font-size: 11px;
-            }
-            h1 {
-                font-size: 16px;
-            }
-            .icon-btn {
-                font-size: 14px;
-            }
-            .counter {
-                font-size: 10px;
-                padding: 2px 8px;
-            }
+            .image-item { width: 70px; }
+            .image-item img { width: 60px; height: 60px; }
+            .image-label { font-size: 9px; max-width: 70px; }
+            .tier-label { width: 90px; font-size: 12px; }
+            button { padding: 4px 10px; font-size: 11px; }
+            h1 { font-size: 16px; }
         }
     </style>
 </head>
@@ -300,11 +234,10 @@
         <h1>ТИР-ЛИСТ МЕЙКЕР</h1>
         <div class="toolbar">
             <input type="file" id="addImagesInput" multiple accept="image/*" style="display:none">
-            <button id="uploadBtn">ДОБАВИТЬ</button>
-            <button id="addRowBtn">+ РЯД</button>
+            <button id="uploadBtn">➕ ДОБАВИТЬ</button>
+            <button id="addRowBtn">➕ РЯД</button>
             <button id="clearAllBtn" class="danger">🗑 ВСЕ КАРТИНКИ</button>
-            <button id="toggleLabelsBtn">🏷️ СКРЫТЬ ПОДПИСИ</button>
-            <button id="resetBtn" class="danger">СБРОС</button>
+            <button id="resetBtn" class="danger">🔄 СБРОС</button>
         </div>
         <div class="counter" id="counter">0 картинок</div>
     </div>
@@ -314,52 +247,176 @@
     </div>
 
     <div class="unassigned-area">
-        <div class="unassigned-title">НЕРАСПРЕДЕЛЁННЫЕ (перетащи)</div>
+        <div class="unassigned-title">📦 НЕРАСПРЕДЕЛЁННЫЕ (перетащи в тиры)</div>
         <div id="unassignedItems" class="unassigned-items"></div>
     </div>
-    <footer>клик на текст — правка | подписи под картинками</footer>
+    <footer>📝 Клик на текст — редактирование | 🖱️ Перетаскивай картинки | ℹ️ Кнопка описания</footer>
+</div>
+
+<div id="labelModal" class="modal">
+    <div class="modal-content">
+        <h3>Введите название игры</h3>
+        <input type="text" id="labelInput" placeholder="Название" value="Новая игра">
+        <div class="modal-buttons">
+            <button id="modalOkBtn">OK</button>
+            <button id="modalCancelBtn">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div id="colorModal" class="modal">
+    <div class="modal-content">
+        <h3>Выберите цвет для ряда</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0; justify-content: center;">
+            <div class="color-option" style="width: 40px; height: 40px; background: #238c51; cursor: pointer;" data-color="#238c51"></div>
+            <div class="color-option" style="width: 40px; height: 40px; background: #33a362; cursor: pointer;" data-color="#33a362"></div>
+            <div class="color-option" style="width: 40px; height: 40px; background: #4cb87a; cursor: pointer;" data-color="#4cb87a"></div>
+            <div class="color-option" style="width: 40px; height: 40px; background: #74cf94; cursor: pointer;" data-color="#74cf94"></div>
+            <div class="color-option" style="width: 40px; height: 40px; background: #dbac5e; cursor: pointer;" data-color="#dbac5e"></div>
+            <div class="color-option" style="width: 40px; height: 40px; background: #cd7a7a; cursor: pointer;" data-color="#cd7a7a"></div>
+        </div>
+        <div class="modal-buttons">
+            <button id="colorModalCancelBtn">Отмена</button>
+        </div>
+    </div>
 </div>
 
 <script>
     (function() {
         let tiers = [
-            { label: "S TIER", color: "#238c51", items: [] },
-            { label: "A TIER", color: "#33a362", items: [] },
-            { label: "B TIER", color: "#4cb87a", items: [] },
-            { label: "C TIER", color: "#74cf94", items: [] },
-            { label: "D TIER", color: "#dbac5e", items: [] },
-            { label: "E TIER", color: "#cd7a7a", items: [] }
+            { label: "S ТИР", color: "#238c51", items: [] },
+            { label: "A ТИР", color: "#33a362", items: [] },
+            { label: "B ТИР", color: "#4cb87a", items: [] },
+            { label: "C ТИР", color: "#74cf94", items: [] },
+            { label: "D ТИР", color: "#dbac5e", items: [] },
+            { label: "E ТИР", color: "#cd7a7a", items: [] }
         ];
         
-        // ОПТИМИЗИРОВАННЫЕ ПОДПИСИ
+        const descriptions = {
+            "ARK": "Сюжет: Вы просыпаетесь на таинственном острове с динозаврами. Геймплей: Выживание, приручение динозавров, строительство баз.",
+            "LEGO STAR WARS": "Сюжет: Пересказ всех 9 эпизодов Звёздных Войн в Lego-стиле. Геймплей: Кооператив, сбор деталей, решение простых головоломок.",
+            "ВЕДЬМАК 3": "Сюжет: Геральт ищет Цири, спасая мир от Ледяного Мрака. Геймплей: Открытый мир, квесты, ведьмачье чутьё, карты Гвинт.",
+            "HITMAN 3": "Сюжет: Завершение трилогии «Мир убийств»: 47-й агент против Providence. Геймплей: Песочницы, скрытность, переодевания, нелинейные убийства.",
+            "ВЕДЬМАК 2": "Сюжет: Геральт пытается снять обвинения в убийстве короля. Геймплей: Линейные уровни, ветвящийся сюжет, две концовки.",
+            "ВЕДЬМАК 1": "Сюжет: Ведьмак теряет память и спасает Каэр Морхен. Геймплей: Своя боевая система (стили), алхимия, уникальная атмосфера.",
+            "MISIDE": "Сюжет: Загадочный симулятор ходьбы по заброшенным локациям. Геймплей: Исследование, атмосферный саундтрек, поиск скрытых смыслов.",
+            "MINECRAFT": "Сюжет: Нет сюжета, полная свобода. Геймплей: Стройка, выживание, крафт, сражения с монстрами.",
+            "FC 26": "Сюжет: Футбольный симулятор, карьерный режим, Ultimate Team. Геймплей: Управление клубом, матчи, трансферы.",
+            "MK 9": "Сюжет: Перезапуск вселенной Mortal Kombat, путешествие во времени. Геймплей: Фаталити, X-Ray удары, сюжетная кампания.",
+            "MK X": "Сюжет: Продолжение MK9: битва между земными воинами и Шинноком. Геймплей: Вариации персонажей, быстрые бои.",
+            "MK 11": "Сюжет: Кроника, богиня времени, объединяет все эпохи. Геймплей: Замедленные фаталити, красивый сюжет, крутая графика.",
+            "MK 1": "Сюжет: Полный перезапуск вселенной, союзники становятся врагами. Геймплей: Лучшая графика, камео-бойцы, добивания.",
+            "PEOPLE PG": "Сюжет: Симулятор жизни в большом городе. Геймплей: Постройка города, управление бизнесом, миссии.",
+            "CHUCHEL": "Сюжет: Странный ворчливый комочек грязи ищет свою вишню. Геймплей: Абсурдный юмор, простые клики, квесты-головоломки.",
+            "CUPHEAD": "Сюжет: Братья проиграли дьяволу и собирают долги. Геймплей: Рун-н-ган, сложничающие боссы, великолепная рисовка.",
+            "FAR CRY 3": "Сюжет: Джейсон Броуди спасает друзей от пиратов на тропическом острове. Геймплей: Открытый мир, захват вышек, охота, безумный Ваас.",
+            "FAR CRY 4": "Сюжет: Аджей Галль возвращается в Кират, чтобы разобрать прах матери. Геймплей: Гималаи, слоны, выбор фракций.",
+            "FAR CRY 5": "Сюжет: Секта Искуплённых захватывает городок Хоуп. Геймплей: Америка, напарники, вертолёты, рыбалка.",
+            "FAR CRY 6": "Сюжет: Дани Рохас борется с диктатором Антоном Кастильо. Геймплей: Куба, партизанская война, самодельное оружие.",
+            "HALF LIFE 1": "Сюжет: Учёный Гордон Фримен выживает в инопланетном вторжении в лабораторию Чёрная Меза. Геймплей: Классический шутер, головоломки, монстры.",
+            "PORTAL 1": "Сюжет: Испытания на испытуемой Челл в лаборатории Aperture Science. Геймплей: Порталы, решение физических головоломок.",
+            "PORTAL 2": "Сюжет: Побег из руин Aperture вместе с роботом Уитли. Геймплей: Кооператив, новые механики, злобный GLaDOS.",
+            "HITMAN CN 47": "Сюжет: Первое появление 47-го агента, ЦРУ и русская мафия. Геймплей: Стелс, переодевания, кастомное оружие.",
+            "HITMAN SA": "Сюжет: 47-й нарушает кодекс и едет в Сицилию защищать священника. Геймплей: Самый большой мир в серии, реалистичная скрытностность.",
+            "HITMAN BM": "Сюжет: 47-го подставляют, и он возвращается к корням. Геймплей: Постройка своего оружия, рейтинг Silent Assassin, неон Лас-Вегаса.",
+            "HITMAN ABSOLUTION": "Сюжет: 47-й защищает девочку-клон от ICA. Геймплей: Более линейная игра, новая система скрытности, замедление времени.",
+            "FAR CRY NEW DAWN": "Сюжет: Постапокалипсис после ядерной войны, выживание в розовых лесах. Геймплей: Двойной прыжок, экспедиции, постройка базы.",
+            "HITMAN SC": "Сюжет: Отдельная снайперская миссия — устранить цели с расстояния. Геймплей: Только снайперская винтовка, спецвозможности."
+        };
+        
         const initialItems = [
             { url: "https://i.ytimg.com/vi/u1MLBnIM37A/maxresdefault.jpg", label: "ARK" },
             { url: "https://i.ytimg.com/vi/YxTvCUin8DU/maxresdefault.jpg", label: "LEGO STAR WARS" },
-            { url: "https://i.ytimg.com/vi/jFApQMxBlk4/maxresdefault.jpg", label: "WITCHER 3" },
+            { url: "https://i.ytimg.com/vi/jFApQMxBlk4/maxresdefault.jpg", label: "ВЕДЬМАК 3" },
             { url: "https://i.ytimg.com/vi/Rjij4OTMwuM/maxresdefault.jpg", label: "HITMAN 3" },
-            { url: "https://i.playground.ru/p/w9oyDncksNGWLbEJNdDW2w.jpeg", label: "WITCHER 2" },
-            { url: "https://images.steamusercontent.com/ugc/1697254277866534390/0314AF3C4CB7270BFD29A0E80EB6E1BDCA151BD1/?imw=512&imh=384&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true", label: "WITCHER 1" },
+            { url: "https://i.playground.ru/p/w9oyDncksNGWLbEJNdDW2w.jpeg", label: "ВЕДЬМАК 2" },
+            { url: "https://images.steamusercontent.com/ugc/1697254277866534390/0314AF3C4CB7270BFD29A0E80EB6E1BDCA151BD1/?imw=512&imh=384&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true", label: "ВЕДЬМАК 1" },
             { url: "https://basket-21.wbbasket.ru/vol3648/part364816/364816926/images/big/1.webp", label: "MISIDE" },
             { url: "https://i.pinimg.com/originals/f4/03/f0/f403f063a3e152ca445cbb59dc9751ec.jpg?nii=t", label: "MINECRAFT" },
             { url: "https://avatars.mds.yandex.net/get-mpic/12300570/2a0000019ad0f74c28f4e0f842000c404c89/orig", label: "FC 26" },
             { url: "https://cdna.artstation.com/p/assets/images/images/016/514/720/large/victor-catib-logo-mk-vetorizado-completo.jpg?1552442118", label: "MK 9" },
             { url: "https://i.playground.ru/e/gERag2pKnOBavwmckSFuBg.png", label: "MK X" },
             { url: "https://i.pinimg.com/736x/f9/8d/3e/f98d3e3a60da5bda659e5a16cbbf3a89.jpg", label: "MK 11" },
-            { url: "https://i.pinimg.com/736x/c1/c0/94/c1c094725dc366398b93f7b4ee7898dd.jpg", label: "MK 1" }
+            { url: "https://i.pinimg.com/736x/c1/c0/94/c1c094725dc366398b93f7b4ee7898dd.jpg", label: "MK 1" },
+            { url: "https://images.steamusercontent.com/ugc/2350385077318003974/C6F6BD43F59A9E1EDEE023F37E98CF275F634EE4/?imw=512&imh=512&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true", label: "PEOPLE PG" },
+            { url: "https://static.wikia.nocookie.net/fnaf-fanon-animatronics/images/d/db/ChuchelWiki.jpg/revision/latest?cb=20220510062920&path-prefix=ru", label: "CHUCHEL" },
+            { url: "https://avatars.mds.yandex.net/get-mpic/5251231/2a000001942d09e7ddada4463db921eeb12c/orig", label: "CUPHEAD" },
+            { url: "https://i.ytimg.com/vi/R6bJU8Tlj-Q/hqdefault.jpg", label: "FAR CRY 3" },
+            { url: "https://i.ytimg.com/vi/PZTYPrKBfag/hqdefault.jpg", label: "FAR CRY 4" },
+            { url: "https://cdn2.steamgriddb.com/icon_thumb/97515d61de00eeec6fb9c913c354b09f.png", label: "FAR CRY 5" },
+            { url: "https://cdn2.steamgriddb.com/icon_thumb/b21c026a6bbb9a02faa5344236371d3e.png", label: "FAR CRY 6" },
+            { url: "https://static.planetminecraft.com/files/image/minecraft/texture-pack/2020/030/13280797-pack_l.jpg", label: "HALF LIFE 1" },
+            { url: "https://i.ytimg.com/vi/iyfJ7LfFppQ/hqdefault.jpg", label: "PORTAL 1" },
+            { url: "https://cdn2.steamgriddb.com/icon_thumb/0994c8d1d6bc62cc56e9112d2303266b.png", label: "PORTAL 2" },
+            { url: "https://avatars.mds.yandex.net/get-mpic/5257755/2a00000193b8a3763b596c0bc8adef49b173/orig", label: "HITMAN CN 47" },
+            { url: "https://yt3.googleusercontent.com/ytc/AIdro_kpDeEO723Ii9JcXd9qtP658cPmJJ_DcYIYvWD9qUYHK4Y=s900-c-k-c0x00ffffff-no-rj", label: "HITMAN SA" },
+            { url: "https://i.pinimg.com/474x/0f/77/2d/0f772d2c3cd8cc2482f28ff61f9732b6.jpg?nii=t", label: "HITMAN BM" },
+            { url: "https://i.pinimg.com/736x/51/97/47/51974794204fd8b13abcb1e8442cc855.jpg", label: "HITMAN ABSOLUTION" },
+            { url: "https://cdna.artstation.com/p/assets/covers/images/066/165/948/large/x-ray-the-clown-x-ray-the-clown-fcnd-logo.jpg?1692207266", label: "FAR CRY NEW DAWN" },
+            { url: "https://i.playground.ru/e/IUxkyoj5l9E-764sSPjQPA.png", label: "HITMAN SC" }
         ];
         
         let unassignedItems = [];
         let nextId = 1;
         let dragSource = null;
-        let labelsVisible = true;
 
-        function generateId() {
-            return Date.now() + '-' + Math.random() + '-' + (nextId++);
-        }
-
+        function generateId() { return Date.now() + '-' + Math.random() + '-' + (nextId++); }
         function updateCounter() {
             const total = unassignedItems.length + tiers.reduce((sum, tier) => sum + tier.items.length, 0);
             document.getElementById('counter').innerText = total + ' картинок';
+        }
+
+        function showDescription(label) {
+            const text = descriptions[label] || "Описание временно отсутствует.\nСюжет: узнайте в игре. Геймплей: отличный, проверьте сами!";
+            const modal = document.createElement('div');
+            modal.className = 'desc-modal active';
+            modal.innerHTML = `<div class="desc-content" onclick="event.stopPropagation()"><h3>📖 ${label}</h3><p>${text.replace(/\n/g, '<br>')}</p><div class="modal-buttons"><button id="closeDescBtn">Закрыть</button></div></div>`;
+            document.body.appendChild(modal);
+            document.getElementById('closeDescBtn').onclick = () => modal.remove();
+            modal.onclick = () => modal.remove();
+        }
+
+        function showLabelModal(defaultValue) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('labelModal');
+                const input = document.getElementById('labelInput');
+                const okBtn = document.getElementById('modalOkBtn');
+                const cancelBtn = document.getElementById('modalCancelBtn');
+                input.value = defaultValue || "Новая игра";
+                modal.classList.add('active');
+                input.focus();
+                const onOk = () => { modal.classList.remove('active'); cleanup(); resolve(input.value); };
+                const onCancel = () => { modal.classList.remove('active'); cleanup(); resolve(null); };
+                const cleanup = () => {
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                };
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+                input.onkeypress = (e) => { if (e.key === 'Enter') onOk(); };
+            });
+        }
+        
+        function showColorModal() {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('colorModal');
+                const options = document.querySelectorAll('.color-option');
+                const cancelBtn = document.getElementById('colorModalCancelBtn');
+                modal.classList.add('active');
+                const onSelect = (color) => { modal.classList.remove('active'); cleanup(); resolve(color); };
+                const onCancel = () => { modal.classList.remove('active'); cleanup(); resolve(null); };
+                const cleanup = () => {
+                    options.forEach(opt => opt.removeEventListener('click', opt.handler));
+                    cancelBtn.removeEventListener('click', onCancel);
+                };
+                options.forEach(opt => {
+                    const color = opt.getAttribute('data-color');
+                    const handler = () => onSelect(color);
+                    opt.addEventListener('click', handler);
+                    opt.handler = handler;
+                });
+                cancelBtn.addEventListener('click', onCancel);
+            });
         }
 
         function render() {
@@ -368,75 +425,47 @@
             tiers.forEach((tier, idx) => {
                 const row = document.createElement('div');
                 row.className = 'tier-row';
-
                 const labelDiv = document.createElement('div');
                 labelDiv.className = 'tier-label';
                 labelDiv.style.backgroundColor = tier.color;
                 const labelSpan = document.createElement('span');
                 labelSpan.contentEditable = 'true';
                 labelSpan.innerText = tier.label;
-                labelSpan.addEventListener('blur', (e) => {
-                    tiers[idx].label = e.target.innerText;
-                    render();
-                });
+                labelSpan.addEventListener('blur', (e) => { tiers[idx].label = e.target.innerText; render(); });
                 labelDiv.appendChild(labelSpan);
-
                 const itemsDiv = document.createElement('div');
                 itemsDiv.className = 'tier-items';
                 itemsDiv.dataset.tierIndex = idx;
-
                 tier.items.forEach((item, itemIdx) => {
                     itemsDiv.appendChild(createImageElement(item.id, item.url, item.label, idx, itemIdx, false));
                 });
-
                 const controlsDiv = document.createElement('div');
                 controlsDiv.className = 'tier-controls';
                 const colorBtn = document.createElement('button');
                 colorBtn.innerText = '🎨';
                 colorBtn.className = 'icon-btn';
-                colorBtn.onclick = () => {
-                    let c = prompt('Цвет (HEX)', tier.color);
-                    if (c && c.trim()) {
-                        tiers[idx].color = c.trim();
-                        render();
-                    }
-                };
+                colorBtn.onclick = async () => { const newColor = await showColorModal(); if (newColor) { tiers[idx].color = newColor; render(); } };
                 const upBtn = document.createElement('button');
                 upBtn.innerText = '⬆';
                 upBtn.className = 'icon-btn';
-                upBtn.onclick = () => {
-                    if (idx > 0) {
-                        [tiers[idx - 1], tiers[idx]] = [tiers[idx], tiers[idx - 1]];
-                        render();
-                    }
-                };
+                upBtn.onclick = () => { if (idx > 0) { [tiers[idx-1], tiers[idx]] = [tiers[idx], tiers[idx-1]]; render(); } };
                 const downBtn = document.createElement('button');
                 downBtn.innerText = '⬇';
                 downBtn.className = 'icon-btn';
-                downBtn.onclick = () => {
-                    if (idx < tiers.length - 1) {
-                        [tiers[idx + 1], tiers[idx]] = [tiers[idx], tiers[idx + 1]];
-                        render();
-                    }
-                };
+                downBtn.onclick = () => { if (idx < tiers.length-1) { [tiers[idx+1], tiers[idx]] = [tiers[idx], tiers[idx+1]]; render(); } };
                 const delBtn = document.createElement('button');
                 delBtn.innerText = '🗑';
                 delBtn.className = 'icon-btn';
-                delBtn.onclick = () => {
-                    tiers.splice(idx, 1);
-                    render();
-                };
+                delBtn.onclick = () => { tiers.splice(idx,1); render(); };
                 controlsDiv.appendChild(colorBtn);
                 controlsDiv.appendChild(upBtn);
                 controlsDiv.appendChild(downBtn);
                 controlsDiv.appendChild(delBtn);
-
                 row.appendChild(labelDiv);
                 row.appendChild(itemsDiv);
                 row.appendChild(controlsDiv);
                 container.appendChild(row);
             });
-
             const unassignedContainer = document.getElementById('unassignedItems');
             unassignedContainer.innerHTML = '';
             unassignedItems.forEach((item) => {
@@ -454,17 +483,19 @@
             if (tierIndex !== undefined) div.setAttribute('data-tier-index', tierIndex);
             if (itemIndex !== undefined) div.setAttribute('data-item-index', itemIndex);
             div.setAttribute('data-from-unassigned', fromUnassigned);
-
             const img = document.createElement('img');
             img.src = url;
+            img.onclick = (e) => { e.stopPropagation(); showDescription(label); };
             div.appendChild(img);
-            
             const labelSpan = document.createElement('div');
             labelSpan.className = 'image-label';
-            if (!labelsVisible) labelSpan.classList.add('hidden');
             labelSpan.innerText = label;
             div.appendChild(labelSpan);
-
+            const descBtn = document.createElement('button');
+            descBtn.innerText = 'ℹ️';
+            descBtn.className = 'desc-btn';
+            descBtn.onclick = (e) => { e.stopPropagation(); showDescription(label); };
+            div.appendChild(descBtn);
             const delSpan = document.createElement('span');
             delSpan.className = 'delete-img';
             delSpan.innerText = '✕';
@@ -480,14 +511,8 @@
                 render();
             };
             div.appendChild(delSpan);
-
             div.addEventListener('dragstart', (e) => {
-                dragSource = {
-                    fromUnassigned: fromUnassigned,
-                    tierIndex: tierIndex,
-                    itemIndex: itemIndex,
-                    id: id
-                };
+                dragSource = { fromUnassigned, tierIndex, itemIndex, id };
                 e.dataTransfer.setData('text/plain', id);
                 div.style.opacity = '0.4';
             });
@@ -523,7 +548,6 @@
                     render();
                 });
             });
-
             const unassignedZone = document.getElementById('unassignedItems');
             if (unassignedZone) {
                 unassignedZone.addEventListener('dragover', (e) => e.preventDefault());
@@ -543,22 +567,20 @@
         }
 
         document.getElementById('uploadBtn').onclick = () => document.getElementById('addImagesInput').click();
-        document.getElementById('addImagesInput').onchange = (e) => {
-            Array.from(e.target.files).forEach(file => {
+        document.getElementById('addImagesInput').onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            for (const file of files) {
                 if (file.type.startsWith('image/')) {
+                    const label = await showLabelModal("Новая игра");
+                    if (label === null) continue;
                     const reader = new FileReader();
-                    const label = prompt("Введите подпись для картинки", "Новая игра");
                     reader.onload = (ev) => {
-                        unassignedItems.push({
-                            id: generateId(),
-                            url: ev.target.result,
-                            label: label || "Без названия"
-                        });
+                        unassignedItems.push({ id: generateId(), url: ev.target.result, label: label.trim() || "Без названия" });
                         render();
                     };
                     reader.readAsDataURL(file);
                 }
-            });
+            }
             e.target.value = '';
         };
         
@@ -567,31 +589,39 @@
             render();
         };
         
-        document.getElementById('clearAllBtn').onclick = () => {
-            if (confirm("Удалить ВСЕ картинки из тиров и нераспределённых?")) {
+        document.getElementById('clearAllBtn').onclick = async () => {
+            const modalDiv = document.createElement('div');
+            modalDiv.style.position = 'fixed';
+            modalDiv.style.top = '0';
+            modalDiv.style.left = '0';
+            modalDiv.style.width = '100%';
+            modalDiv.style.height = '100%';
+            modalDiv.style.background = 'rgba(0,0,0,0.8)';
+            modalDiv.style.zIndex = '2000';
+            modalDiv.style.display = 'flex';
+            modalDiv.style.justifyContent = 'center';
+            modalDiv.style.alignItems = 'center';
+            modalDiv.innerHTML = `<div style="background: #1a2a1f; border-radius: 20px; padding: 20px; width: 300px; border: 2px solid #cb6e6e;"><h3>Подтверждение</h3><p>Удалить ВСЕ картинки?</p><div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;"><button id="confirmYes" style="background: #cb6e6e;">ДА</button><button id="confirmNo">НЕТ</button></div></div>`;
+            document.body.appendChild(modalDiv);
+            const result = await new Promise((resolve) => {
+                document.getElementById('confirmYes').onclick = () => { resolve(true); modalDiv.remove(); };
+                document.getElementById('confirmNo').onclick = () => { resolve(false); modalDiv.remove(); };
+            });
+            if (result) {
                 tiers.forEach(tier => tier.items = []);
                 unassignedItems = [];
                 render();
             }
         };
         
-        document.getElementById('toggleLabelsBtn').onclick = () => {
-            labelsVisible = !labelsVisible;
-            document.getElementById('toggleLabelsBtn').innerText = labelsVisible ? "🏷️ СКРЫТЬ ПОДПИСИ" : "🏷️ ПОКАЗАТЬ ПОДПИСИ";
-            document.querySelectorAll('.image-label').forEach(el => {
-                if (labelsVisible) el.classList.remove('hidden');
-                else el.classList.add('hidden');
-            });
-        };
-        
         document.getElementById('resetBtn').onclick = () => {
             tiers = [
-                { label: "S TIER", color: "#238c51", items: [] },
-                { label: "A TIER", color: "#33a362", items: [] },
-                { label: "B TIER", color: "#4cb87a", items: [] },
-                { label: "C TIER", color: "#74cf94", items: [] },
-                { label: "D TIER", color: "#dbac5e", items: [] },
-                { label: "E TIER", color: "#cd7a7a", items: [] }
+                { label: "S ТИР", color: "#238c51", items: [] },
+                { label: "A ТИР", color: "#33a362", items: [] },
+                { label: "B ТИР", color: "#4cb87a", items: [] },
+                { label: "C ТИР", color: "#74cf94", items: [] },
+                { label: "D ТИР", color: "#dbac5e", items: [] },
+                { label: "E ТИР", color: "#cd7a7a", items: [] }
             ];
             unassignedItems = [];
             initialItems.forEach(item => {
